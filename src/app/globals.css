@@ -13,9 +13,11 @@
 
   --color-strawberry: #FF4D4D;
   --color-vanilla: #F8F3ED;
-  --color-mint: #A8E6CF;
   --color-chocolate: #3E1F1C;
-  --color-chef-light: #7E4D3A;
+  
+  --chocolate-brown: #3E1F1C;
+  --strawberry-accent: #FF4D4D;
+  --vanilla-cream: #F8F3ED;
 
   --animate-float: float 3s ease-in-out infinite;
 

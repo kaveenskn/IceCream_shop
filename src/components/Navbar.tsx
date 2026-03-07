@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, IceCream } from "lucide-react";
 
@@ -15,6 +16,7 @@ const navItems = [
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const pathname = usePathname();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -25,7 +27,7 @@ export default function Navbar() {
     }, []);
 
     return (
-        <nav className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4">
+        <nav className="fixed top-4 left-0 right-0 z-[1000] flex justify-center px-4">
             <motion.div
                 initial={{ y: -100, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
@@ -40,26 +42,31 @@ export default function Navbar() {
                     <div className="p-2 bg-strawberry rounded-full transition-transform group-hover:scale-110 group-hover:rotate-12">
                         <IceCream className="w-5 h-5 text-white" />
                     </div>
-                    <span className="text-xl font-bold bg-gradient-to-r from-strawberry to-chocolate bg-clip-text text-transparent">
+                    <span className="text-xl font-bold bg-linear-to-r from-strawberry to-chocolate bg-clip-text text-transparent">
                         Scoops&Co
                     </span>
                 </Link>
 
                 {/* Desktop Nav Items */}
                 <div className="hidden md:flex items-center gap-8">
-                    {navItems.map((item) => (
-                        <Link
-                            key={item.name}
-                            href={item.href}
-                            className="relative text-sm font-medium text-chocolate/80 hover:text-strawberry transition-colors group"
-                        >
-                            {item.name}
-                            <motion.span
-                                className="absolute -bottom-1 left-0 w-0 h-0.5 bg-strawberry transition-all group-hover:w-full"
-                                layoutId="underline"
-                            />
-                        </Link>
-                    ))}
+                    {navItems.map((item) => {
+                        const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+
+                        return (
+                            <Link
+                                key={item.name}
+                                href={item.href}
+                                aria-current={isActive ? "page" : undefined}
+                                className="relative inline-block text-sm text-white font-bold group transition-transform duration-200 hover:scale-105"
+                            >
+                                {item.name}
+                                <span
+                                    className={`absolute -bottom-1 left-0 h-0.5 bg-white transition-all duration-300 ${isActive ? "w-full" : "w-0 group-hover:w-full"
+                                        }`}
+                                />
+                            </Link>
+                        );
+                    })}
                 </div>
 
                 {/* Mobile Menu Button */}
@@ -81,16 +88,22 @@ export default function Navbar() {
                             className="absolute top-full left-0 right-0 mt-4 p-4 bg-white/90 backdrop-blur-2xl rounded-3xl border border-white/20 shadow-2xl md:hidden"
                         >
                             <div className="flex flex-col gap-4">
-                                {navItems.map((item) => (
-                                    <Link
-                                        key={item.name}
-                                        href={item.href}
-                                        onClick={() => setIsOpen(false)}
-                                        className="px-4 py-3 text-lg font-medium text-chocolate hover:text-strawberry hover:bg-strawberry/5 rounded-2xl transition-all"
-                                    >
-                                        {item.name}
-                                    </Link>
-                                ))}
+                                {navItems.map((item) => {
+                                    const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+
+                                    return (
+                                        <Link
+                                            key={item.name}
+                                            href={item.href}
+                                            aria-current={isActive ? "page" : undefined}
+                                            onClick={() => setIsOpen(false)}
+                                            className={`px-4 py-3 text-lg font-medium text-chocolate hover:bg-strawberry/5 rounded-2xl transition-all hover:underline decoration-white underline-offset-4 hover:scale-105 ${isActive ? "underline decoration-white underline-offset-4" : ""
+                                                }`}
+                                        >
+                                            {item.name}
+                                        </Link>
+                                    );
+                                })}
                             </div>
                         </motion.div>
                     )}
