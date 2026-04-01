@@ -14,7 +14,7 @@
   --color-strawberry: #FF4D4D;
   --color-vanilla: #F8F3ED;
   --color-chocolate: #3E1F1C;
-  
+
   --chocolate-brown: #3E1F1C;
   --strawberry-accent: #FF4D4D;
   --vanilla-cream: #F8F3ED;
@@ -32,6 +32,31 @@
       transform: translateY(-20px);
     }
   }
+}
+
+/* Swiper Customization */
+.swiper {
+  width: 100%;
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+
+.swiper-slide {
+  background-position: center;
+  background-size: cover;
+  width: 320px;
+  height: 450px;
+}
+
+@media (min-width: 768px) {
+  .swiper-slide {
+    width: 400px;
+    height: 550px;
+  }
+}
+
+.swiper-slide-shadow {
+  border-radius: 2.5rem;
 }
 
 @media (prefers-color-scheme: dark) {

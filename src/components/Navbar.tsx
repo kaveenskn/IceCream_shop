@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -16,18 +16,28 @@ const navItems = [
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const [hideNav, setHideNav] = useState(false);
+    const prevScrollY = useRef(0);
     const pathname = usePathname();
 
+    // Scroll handler to manage background and hide-on-scroll
     useEffect(() => {
         const handleScroll = () => {
-            setScrolled(window.scrollY > 20);
+            const currentY = window.scrollY;
+            setScrolled(currentY > 20);
+            if (currentY > prevScrollY.current && currentY > 100) {
+                setHideNav(true);
+            } else {
+                setHideNav(false);
+            }
+            prevScrollY.current = currentY;
         };
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
     return (
-        <nav className="fixed top-4 left-0 right-0 z-[1000] flex justify-center px-4">
+        <nav className={`fixed top-4 left-0 right-0 z-[1000] flex justify-center px-4 transition-transform duration-300 ${hideNav ? "-translate-y-[150%]" : "translate-y-0"}`}>
             <motion.div
                 initial={{ y: -100, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
@@ -43,7 +53,7 @@ export default function Navbar() {
                         <IceCream className="w-5 h-5 text-white" />
                     </div>
                     <span className="text-xl font-bold bg-linear-to-r from-strawberry to-chocolate bg-clip-text text-transparent">
-                        Scoops&Co
+                        Scoops&amp;Co
                     </span>
                 </Link>
 
@@ -51,7 +61,6 @@ export default function Navbar() {
                 <div className="hidden md:flex items-center gap-8">
                     {navItems.map((item) => {
                         const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
-
                         return (
                             <Link
                                 key={item.name}
@@ -61,8 +70,7 @@ export default function Navbar() {
                             >
                                 {item.name}
                                 <span
-                                    className={`absolute -bottom-1 left-0 h-0.5 bg-white transition-all duration-300 ${isActive ? "w-full" : "w-0 group-hover:w-full"
-                                        }`}
+                                    className={`absolute -bottom-1 left-0 h-0.5 bg-white transition-all duration-300 ${isActive ? "w-full" : "w-0 group-hover:w-full"}`}
                                 />
                             </Link>
                         );
@@ -90,15 +98,13 @@ export default function Navbar() {
                             <div className="flex flex-col gap-4">
                                 {navItems.map((item) => {
                                     const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
-
                                     return (
                                         <Link
                                             key={item.name}
                                             href={item.href}
                                             aria-current={isActive ? "page" : undefined}
                                             onClick={() => setIsOpen(false)}
-                                            className={`px-4 py-3 text-lg font-medium text-chocolate hover:bg-strawberry/5 rounded-2xl transition-all hover:underline decoration-white underline-offset-4 hover:scale-105 ${isActive ? "underline decoration-white underline-offset-4" : ""
-                                                }`}
+                                            className={`px-4 py-3 text-lg font-medium text-chocolate hover:bg-strawberry/5 rounded-2xl transition-all hover:underline decoration-white underline-offset-4 hover:scale-105 ${isActive ? "underline decoration-white underline-offset-4" : ""}`}
                                         >
                                             {item.name}
                                         </Link>
