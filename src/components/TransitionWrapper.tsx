@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { usePathname } from 'next/navigation';
 import { ReactNode, useEffect, useState } from 'react';
 
@@ -25,9 +25,9 @@ export default function TransitionWrapper({ children }: { children: ReactNode })
         setPrevPath(pathname);
     }
 
-    const variants = {
+    const variants: Variants = {
         initial: (dir: number) => ({
-            x: dir > 0 ? '100%' : dir < 0 ? '-100%' : 0,
+            x: dir > 0 ? '100vw' : dir < 0 ? '-100vw' : 0,
             opacity: 0,
         }),
         animate: {
